@@ -11,12 +11,17 @@
  * http://arduino.berlios.de
  *
  */
+// sudo chmod a+rw /dev/ttyACM0 
+// in case there are problems with ubuntu
+// also, delete preferences.txt if there are problems with baud rate
 
 int potPin = 3;    // select the input pin for the potentiometer
-int ledPin = 13;   // select the pin for the LED
-int ledPin2 = 8;   // select the pin for the LED
+int ledPin = 5;   // select the pin for the LED
+int ledPin2 = 6;   // select the pin for the LED
 
 int val = 0;       // variable to store the value coming from the sensor
+int valcont = 0;
+int valold = 0;
 
 void setup() {
   pinMode(ledPin, OUTPUT);  // declare the ledPin as an OUTPUT
@@ -27,15 +32,27 @@ void setup() {
 
 void loop() {
   val = analogRead(potPin);    // read the value from the sensor
+  valcont = (int)((float)val*5./1023.);
+  if( valold != valcont && valcont != 0 ){
+     delay(1500);
+  }
+  valold = valcont;
   Serial.print((float)val*5./1023.);
+  Serial.print("\t");
+  Serial.print(valcont);
   Serial.print("\n");
-  digitalWrite(ledPin, HIGH);  // turn the ledPin on
-  digitalWrite(ledPin2, HIGH);  // turn the ledPin on
 
-  delay(val);                  // stop the program for some time
-  digitalWrite(ledPin, LOW);   // turn the ledPin off
-  digitalWrite(ledPin2, LOW);   // turn the ledPin off
-
-  delay(val);     // stop the program for some time
+  if(valcont == 0){
+    digitalWrite(ledPin, HIGH);  // turn the ledPin on
+    digitalWrite(ledPin2, HIGH);  // turn the ledPin on
+  }
+  if(valcont == 3){
+    digitalWrite(ledPin, HIGH);  // turn the ledPin on
+    digitalWrite(ledPin2, LOW);  // turn the ledPin on
+  }
+  if(valcont == 5){
+    digitalWrite(ledPin, LOW);  // turn the ledPin on
+    digitalWrite(ledPin2, HIGH);  // turn the ledPin on
+  }
 
 }
