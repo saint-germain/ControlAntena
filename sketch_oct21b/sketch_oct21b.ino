@@ -14,20 +14,22 @@
 // sudo chmod a+rw /dev/ttyACM0 
 // in case there are problems with ubuntu
 // also, delete preferences.txt if there are problems with baud rate
+// vcc and ground from arduino
 
-int potPin = 3;    // select the input pin for the potentiometer
-int ledPin = 5;   // select the pin for the LED
-int ledPin2 = 6;   // select the pin for the LED
+int potPin = 3;    // select the input pin for the sensor
+int ledPin = 5;   // select the pin for relays 1 and 4 (26 pb)
+int ledPin2 = 6;   // select the pin for relays 2 and 3 (25 pb)
 
 float val = 0;       // variable to store the value coming from the sensor
-int valcont = 0;
-int valold = 0;
-float vref = 2.5;
-float eps = 0.1;
+int valcont = 0;     // state of the motor, 0, 3, 5
+int valold = 0;      // dummy for delay after state change
+float vref = 2.5;    // reference voltage
+float eps = 0.1;     // tolerance
 
 void setup() {
   pinMode(ledPin, OUTPUT);  // declare the ledPin as an OUTPUT
   pinMode(ledPin2, OUTPUT);  // declare the ledPin as an OUTPUT
+// protection from short-circuiting the motor
   digitalWrite(ledPin, HIGH);  // turn the ledPin on
   digitalWrite(ledPin2, HIGH);  // turn the ledPin on
   Serial.begin(9600);
