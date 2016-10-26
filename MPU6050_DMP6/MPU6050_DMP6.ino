@@ -142,8 +142,12 @@ int ledPin2 = 6;   // select the pin for relays 2 and 3 (25 pb)
 float val = 0;       // variable to store the value coming from the sensor
 int valcont = 0;     // state of the motor, 0, 3, 5
 int valold = 0;      // dummy for delay after state change
-float vref = 5;    // reference value (angle)
+float vref = 90;    // reference value (angle)
 float eps = 2;     // tolerance
+float aztol = 0.;
+float azold = 0.;
+boolean ready = false;
+float azcorr = 0.;
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
@@ -325,26 +329,44 @@ void loop() {
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
             mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+            val = ypr[0] * 180/M_PI;
             Serial.print("ypr\t");
             Serial.print(valcont);
             Serial.print("\t");
-            Serial.print(ypr[0] * 180/M_PI);
+            if (ready == false){
+              Serial.print(ypr[0] * 180/M_PI);
+            }
+            if (ready == true){
+              Serial.print(-azcorr + ypr[0] * 180/M_PI);
+              val = -azcorr + ypr[0] * 180/M_PI;
+            }
             Serial.print("\t");
             Serial.print(ypr[1] * 180/M_PI);
             Serial.print("\t");
             Serial.println(ypr[2] * 180/M_PI);
-            val = ypr[1] * 180/M_PI;
-            if (val < vref - eps){
+            if (ready == false){
+              aztol = abs(val-azold);
+              if (aztol < 0.001 ){
+                ready = true;
+                azcorr = val;
+                Serial.println("System ready");
+              }                           
+            }
+            azold=val;
+            if (val < -180){
+              val = val + 360;
+            }
+            if (val < vref - eps && ready == true){
               valcont = 5;
             }
-            if (val > vref + eps){
+            if (val > vref + eps && ready == true){
               valcont = 3;
             }
-            if (val >= vref - eps && val <= vref + eps){
+            if (val >= vref - eps && val <= vref + eps && ready == true){
               valcont = 0;
             }  
   
-            if( valold != valcont && valcont != 0 ){
+            if( valold != valcont && valcont != 0  && ready == true){
               delay(1500);
               digitalWrite(ledPin, HIGH);  // turn the ledPin on
               digitalWrite(ledPin2, HIGH);  // turn the ledPin on
@@ -354,11 +376,11 @@ void loop() {
               digitalWrite(ledPin, HIGH);  // turn the ledPin on
               digitalWrite(ledPin2, HIGH);  // turn the ledPin on
             }
-            if(valcont == 3){
+            if(valcont == 3 && ready == true){
               digitalWrite(ledPin, HIGH);  // turn the ledPin on
               digitalWrite(ledPin2, LOW);  // turn the ledPin on
             }
-            if(valcont == 5){
+            if(valcont == 5 && ready == true){
               digitalWrite(ledPin, LOW);  // turn the ledPin on
               digitalWrite(ledPin2, HIGH);  // turn the ledPin on
             }       
