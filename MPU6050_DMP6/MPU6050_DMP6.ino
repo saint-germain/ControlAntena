@@ -148,6 +148,7 @@ float aztol = 0.;
 float azold = 0.;
 boolean ready = false;
 float azcorr = 0.;
+// https://diyhacking.com/arduino-mpu-6050-imu-sensor-tutorial/
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
