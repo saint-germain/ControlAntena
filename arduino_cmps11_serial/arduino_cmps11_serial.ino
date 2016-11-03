@@ -110,6 +110,14 @@ void loop()
   
 //  Serial.print("    angle 8: ");        // Display 8bit angle
 //  Serial.println(angle8, DEC);
+  if(altbyte > 900 || azbyte > 3600){
+    digitalWrite(ledPin, HIGH);  // turn the ledPin on
+    digitalWrite(ledPin2, HIGH);  
+    Serial.println("Angles from computer are inconsistent.");
+    Serial.println("Az should be lower than 3600 and Alt should be lower than 90.");
+    Serial.println("Stopping the telescope now. Waiting for new coordinates.");
+    delay(2500); 
+  }
   
   val = (float)angle16/10.;
   vref = (float)azbyte/10.;
@@ -143,15 +151,7 @@ void loop()
     digitalWrite(ledPin, LOW);  // turn the ledPin on
     digitalWrite(ledPin2, HIGH);  // turn the ledPin on
   }       
-  if(altbyte > 900 && azbyte > 3600){
-    digitalWrite(ledPin, HIGH);  // turn the ledPin on
-    digitalWrite(ledPin2, HIGH);  
-    Serial.println("Angles from computer are inconsistent.");
-    Serial.println("Az should be lower than 3600 and Alt should be lower than 90.");
 
-    delay(2500);
-    
-  }
   
   
   valalt = (float)((int)pitch);
@@ -189,17 +189,8 @@ void loop()
     digitalWrite(ledPinalt, LOW);  // turn the ledPin on
     digitalWrite(ledPinalt2, HIGH);  // turn the ledPin on
   }       
-  if(altbyte > 900 && azbyte > 3600){
-    digitalWrite(ledPinalt, HIGH);  // turn the ledPin on
-    digitalWrite(ledPinalt2, HIGH);  
-    Serial.println("Angles from computer are inconsistent.");
-    Serial.println("Az should be lower than 3600 and Alt should be lower than 90.");
-
-    delay(2500);
-    
-  }
   
-  delay(100);                           // Short delay before next loop
+  delay(10000);                           // Short delay before next loop
 }
 
 
