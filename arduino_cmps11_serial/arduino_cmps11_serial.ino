@@ -3,6 +3,7 @@
 *        By James Henderson, 2014        * 
 *****************************************/
 // 1 - vcc ; 2 - tx ; 3 - rx ; 4 - mode ; 5 - noconnect ; 6 - gnd
+// rm -f /var/lock/LCK* cu
 
 #include <SoftwareSerial.h>
 
@@ -34,7 +35,7 @@ int valcontalt = 0;     // state of the motor, 0, 3, 5
 int valoldalt = 0;      // dummy for delay after state change
 float vrefalt = 30;    // reference value (angle)
 float azold = 0.;
-//char mybyte = '\x0b';
+
 
 
 void setup()
@@ -55,14 +56,11 @@ void setup()
 
 void loop()
 {
-//  char inByte = ' ';
   if(Serial.available()){
     azhigh_b = Serial.read();
     azlow_b = Serial.read();
     althigh_b = Serial.read();
     altlow_b = Serial.read();
-//    Serial.print(inByte); 
-//    Serial.print("\t"); 
     delay(100);
     azbyte = azhigh_b;                // Calculate 16 bit angle
     azbyte <<= 8;
@@ -190,7 +188,7 @@ void loop()
     digitalWrite(ledPinalt2, HIGH);  // turn the ledPin on
   }       
   
-  delay(10000);                           // Short delay before next loop
+  delay(100);                           // Short delay before next loop
 }
 
 
