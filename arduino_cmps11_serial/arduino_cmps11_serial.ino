@@ -62,13 +62,23 @@ void loop()
     althigh_b = Serial.read();
     altlow_b = Serial.read();
     delay(100);
-    azbyte = azhigh_b;                // Calculate 16 bit angle
-    azbyte <<= 8;
-    azbyte += azlow_b;
-    altbyte = althigh_b;                // Calculate 16 bit angle
-    altbyte <<= 8;
-    altbyte += altlow_b;
+    if(althigh_b <=3 && azhigh_b <=14){
+      azbyte = azhigh_b;                // Calculate 16 bit angle
+      azbyte <<= 8;
+      azbyte += azlow_b;
+      altbyte = althigh_b;                // Calculate 16 bit angle
+      altbyte <<= 8;
+      altbyte += altlow_b;
+    }
   }
+  Serial.print(azhigh_b,DEC); 
+  Serial.print("\t"); 
+  Serial.print(azlow_b,DEC); 
+  Serial.print("\t");   
+  Serial.print(althigh_b,DEC); 
+  Serial.print("\t"); 
+  Serial.print(altlow_b,DEC); 
+  Serial.print("\t");   
   Serial.print(azbyte,DEC); 
   Serial.print("\t"); 
   Serial.print(altbyte,DEC); 
@@ -111,6 +121,8 @@ void loop()
   if(altbyte > 900 || azbyte > 3600){
     digitalWrite(ledPin, HIGH);  // turn the ledPin on
     digitalWrite(ledPin2, HIGH);  
+    digitalWrite(ledPinalt, HIGH);  // turn the ledPin on
+    digitalWrite(ledPinalt2, HIGH);  
     Serial.println("Angles from computer are inconsistent.");
     Serial.println("Az should be lower than 3600 and Alt should be lower than 90.");
     Serial.println("Stopping the telescope now. Waiting for new coordinates.");
@@ -141,11 +153,11 @@ void loop()
     digitalWrite(ledPin, HIGH);  // turn the ledPin on
     digitalWrite(ledPin2, HIGH);  // turn the ledPin on
   }
-  if(valcont == 3 && altbyte < 1000 && azbyte < 4000){
+  if(valcont == 3 && altbyte <= 900 && azbyte <= 3600){
     digitalWrite(ledPin, HIGH);  // turn the ledPin on
     digitalWrite(ledPin2, LOW);  // turn the ledPin on
   }
-  if(valcont == 5 && altbyte < 1000 && azbyte < 4000){
+  if(valcont == 5 && altbyte <= 900 && azbyte <= 3600){
     digitalWrite(ledPin, LOW);  // turn the ledPin on
     digitalWrite(ledPin2, HIGH);  // turn the ledPin on
   }       
@@ -179,11 +191,11 @@ void loop()
     digitalWrite(ledPinalt, HIGH);  // turn the ledPin on
     digitalWrite(ledPinalt2, HIGH);  // turn the ledPin on
   }
-  if(valcontalt == 3 && altbyte < 1000 && azbyte < 4000){
+  if(valcontalt == 3 && altbyte <= 900 && azbyte <= 3600){
     digitalWrite(ledPinalt, HIGH);  // turn the ledPin on
     digitalWrite(ledPinalt2, LOW);  // turn the ledPin on
   }
-  if(valcontalt == 5 && altbyte < 1000 && azbyte < 4000){
+  if(valcontalt == 5 && altbyte <= 900 && azbyte <= 3600){
     digitalWrite(ledPinalt, LOW);  // turn the ledPin on
     digitalWrite(ledPinalt2, HIGH);  // turn the ledPin on
   }       
