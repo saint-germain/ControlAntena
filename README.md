@@ -3,6 +3,8 @@
 Radio Telescope System Setup
 
 - Arduino to CMPS11 connection
+
+
 ![](arduino_cmps12_serial.png)
 
 - Debian
