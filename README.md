@@ -8,6 +8,7 @@ Radio Telescope System Setup
 ![](arduino_cmps12_serial.png)
 
 - Debian
+  - Install arduino IDE 
   - Anaconda + dedicated py3 env (py37 in ASUS)
   - apt gnuradio
   - apt gqrx-sdr
@@ -17,7 +18,7 @@ Radio Telescope System Setup
   - Install git
   - git clone this repository
   
-- Operating control system from code/ControlAntena
+- Operating drive control system from code/ControlAntena
   - conda activate py37
   - jupyter notebook
   - commarduino.ipynb
